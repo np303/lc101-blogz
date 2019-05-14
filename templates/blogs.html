@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block content %}
+    
+<nav>
+  <a href="/newpost">Make a New Post</a>
+  <a href="/blogs">Main Blog Page</a>
+  <a href="/logout">Log Out</a>
+</nav>
+
+<h1>Check Out These Killer Blog Posts!</h1>
+<hr>
+
+    {% if posts|length == 0 %}
+    <p>No posts yet</p>
+    {% else %}
+
+       
+            {% for blog in posts %}
+            <div class="mainblogtitle">
+            <a href="./blogs?id={{blog.id}}">{{blog.title}}</a>
+            </div>
+            
+            <div class="mainblogpost">
+            <p>{{blog.post}}</p>
+            </div>
+            <hr>
+            {% endfor %}
+        
+
+    {% endif %}
+
+
+{% endblock %}

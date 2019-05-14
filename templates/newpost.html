@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<nav>
+    <a href="/blog">Main Blog Page</a>
+</nav>
+
+<form method="POST">
+    <fieldset>
+        <legend>Create a Blog Post!</legend>
+
+        <p>
+            <div class="posttitle">
+                <label>Post Title</label>
+                <input type="text" name='title' minlength="1" required />
+        </p>
+        </div>
+
+
+
+        <p>
+            <div class="posttext">
+                <label>Mind Dump!</label>
+                <textarea id="posttextarea" name='post' minlength="1" rows="3" cols="80" required /></textarea>
+        </p>
+        </div>
+
+        <div class="submitpost">
+            <input type="submit" value='Add Post' />
+        </div>
+
+</form>
+</fieldset>
+
+
+
+
+
+
+
+{% endblock %}

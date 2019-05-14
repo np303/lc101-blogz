@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block content %}
+    
+
+       
+    <nav>
+        <a href="/newpost">Make a New Post</a>
+        <a href="/blogs">Main Blog Page</a>
+    </nav>
+    
+    <!-- we get the title and post from BLOGPOST, created in the function, this will pull anything from the db. -->
+    <div class="indblogtitle">
+    <p>{{blogpost.title}}</p>
+    </div>
+    
+    <div class="indblogpost">
+    {{blogpost.post}}
+    </div>
+        
+        <hr>
+
+{% endblock %}
