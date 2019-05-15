@@ -21,7 +21,7 @@ class Blog(db.Model):
         self.post =  post
         self.owner = owner
 
-posts = []
+
 
 
 class User(db.Model):
