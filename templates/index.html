@@ -15,7 +15,7 @@
     
     
 {% for user in users %}
-    <li> <a href="/blog?userid={{user.id}}"> {{ user.username }}</li></a>
+    <li> <a href="./blog?owner_id={{user.id}}"> {{ user.username }}</li></a>
     </div>
 {% endfor %}
     

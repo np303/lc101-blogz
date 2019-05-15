@@ -34,7 +34,9 @@ class User(db.Model):
     def __init__(self, username, password):
         self.username = username
         self.password = password
-        
+
+    def __repr__(self):
+        return '<User %r' % self.username
 
 ##############################
 def logged_in_user():
@@ -112,8 +114,9 @@ def blog():
     #Query database for all blog posts
     allblogposts = Blog.query.all()
     post_id = request.args.get('id')
-    user_id = request.args.get('userid')
+    singleuser_id = request.args.get('owner_id')
     username = request.args.get('username')
+    userblogs = request.args.get('owner_id')
     blogpost = Blog.query.filter_by(id=post_id).first()
     owner = User.query.filter_by(username=session['username']).first()
 
@@ -126,14 +129,10 @@ def blog():
         blogpost = Blog.query.filter_by(id=post_id).first()
         owner = User.query.filter_by(username=session['username']).first()
         return render_template('singlepost.html', blogpost=blogpost, owner=blogpost.owner.username, welcome=welcome)
-
-    if (user_id):
-        allblogposts = Blog.query.all()
-        username = request.args.get('username')
-        blogpost = Blog.query.filter_by(id=post_id).first()
-        owner = User.query.filter_by(username=session['username']).first()
-        posts = Blog.query.filter_by(owner_id=user_id).all()
-        return render_template('singleuser.html', posts=allblogposts, blogpost=blogpost)        
+    else:
+        if (singleuser_id):
+            singleuserblogs = Blog.query.filter_by(owner_id=singleuser_id)
+            return render_template('singleuser.html', posts=singleuserblogs)        
 
 
     return render_template('blog.html', title="Blogs!", posts=allblogposts, blogpost=blogpost, welcome=welcome)

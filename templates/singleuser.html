@@ -13,23 +13,16 @@
 <hr>
 
 
-    {% if posts|length == 0 %}
-    <p>No posts yet</p>
-    {% else %}
-
-    
-
-    {% for post in posts %}
+    {% for blog in posts %}
     <div class="indblogtitle">
-    <p>{{post.title}}</p>
+    <p>{{blog.title}}</p>
     </div>
     
     <div class="indblogpost">
-    <p>{{post.post}}</p>
+    <p>{{blog.post}}</p>
     </div>
         
 
     {% endfor %}
-{% endif %}
 
 {% endblock %}
