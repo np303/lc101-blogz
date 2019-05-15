@@ -36,7 +36,7 @@ class User(db.Model):
         self.password = password
 
     def __repr__(self):
-        return '<User %r' % self.username
+        return self.username
 
 ##############################
 def logged_in_user():

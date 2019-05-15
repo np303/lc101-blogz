@@ -11,17 +11,21 @@
     </nav>
     
     <!-- we get the title and post from BLOGPOST, created in the function, this will pull anything from the db. -->
-    
-    <h1> Authorz is <a href="/blog?userid={{user_id}}"> {{ blogpost.owner.username }} </a></h1>
-    
+ <p>Author, <a href="./blog?owner_id={{blogpost.owner_id}}">{{ blogpost.owner }}</a></p>
+   
+     
+  
+         
     <div class="indblogtitle">
     <p>{{blogpost.title}}</p>
     </div>
     
     <div class="indblogpost">
-    {{blogpost.post}}
+    <p>{{blogpost.post}}</p>
     </div>
         
         <hr>
 
 {% endblock %}
+
+
