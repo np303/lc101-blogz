@@ -115,10 +115,8 @@ def blog():
     allblogposts = Blog.query.all()
     post_id = request.args.get('id')
     singleuser_id = request.args.get('owner_id')
-    username = request.args.get('username')
-    userblogs = request.args.get('owner_id')
     blogpost = Blog.query.filter_by(id=post_id).first()
-    owner = User.query.filter_by(username=session['username']).first()
+    
 
     welcome = "You are not logged in"
     if 'username' in session:
@@ -129,6 +127,7 @@ def blog():
         blogpost = Blog.query.filter_by(id=post_id).first()
         owner = User.query.filter_by(username=session['username']).first()
         return render_template('singlepost.html', blogpost=blogpost, owner=blogpost.owner.username, welcome=welcome)
+    
     else:
         if (singleuser_id):
             singleuserblogs = Blog.query.filter_by(owner_id=singleuser_id)
