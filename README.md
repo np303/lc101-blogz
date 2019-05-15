@@ -48,5 +48,9 @@ User clicks "Logout" and is redirected to the /blog page and is unable to access
 
 
 
+Basic requirements complete! 
+
+
+
 
 
