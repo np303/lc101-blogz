@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block content %}
+    
+
+<h1> {{ welcome }} </h1>
+       
+    <nav>
+        <a href="/newpost">Make a New Post</a>
+        <a href="/blog">Main Blog Page</a>
+    </nav>
+    
+    <!-- we get the title and post from BLOGPOST, created in the function, this will pull anything from the db. -->
+    
+    <h1> Authorz is <a href="/blog?userid={{user_id}}"> {{ blogpost.owner.username }} </a></h1>
+    
+    <div class="indblogtitle">
+    <p>{{blogpost.title}}</p>
+    </div>
+    
+    <div class="indblogpost">
+    {{blogpost.post}}
+    </div>
+        
+        <hr>
+
+{% endblock %}

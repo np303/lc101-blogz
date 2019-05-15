@@ -1,11 +1,13 @@
 {% extends "base.html" %}
 
 {% block content %}
-    
+   
+<h1> {{ welcome }} </h1>
 <nav>
   <a href="/newpost">Make a New Post</a>
-  <a href="/blogs">Main Blog Page</a>
+  <a href="/blog">Main Blog Page</a>
   <a href="/logout">Log Out</a>
+  <a href="/">All</a>
 </nav>
 
 <h1>Check Out These Killer Blog Posts!</h1>
@@ -17,8 +19,11 @@
 
        
             {% for blog in posts %}
+            <div class="mainblogauthor"> 
+            Authorz is <a href="./?id={{blog.id}}">{{ blog.owner.username }} </a></h1>
+            </div>            
             <div class="mainblogtitle">
-            <a href="./blogs?id={{blog.id}}">{{blog.title}}</a>
+            <a href="./blog?id={{blog.id}}">{{blog.title}}</a>
             </div>
             
             <div class="mainblogpost">

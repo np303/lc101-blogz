@@ -27,42 +27,42 @@ posts = []
 class User(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
-    email = db.Column(db.String(120), unique=True)
+    username = db.Column(db.String(120), unique=True)
     password = db.Column(db.String(120))
     blogs = db.relationship('Blog', backref='owner')
 
-    def __init__(self, email, password):
-        self.email = email
+    def __init__(self, username, password):
+        self.username = username
         self.password = password
         
 
 ##############################
 def logged_in_user():
-    owner = User.query.filter_by(email=session['user']).first()
+    owner = User.query.filter_by(username=session['user']).first()
     return owner
 
 @app.before_request
 def require_login():
-    allowed_routes = ['login', 'signup']
-    if request.endpoint not in allowed_routes and 'email' not in session:
+    allowed_routes = ['login', 'signup', 'index']
+    if request.endpoint not in allowed_routes and 'username' not in session:
         return redirect('/login')     
 
 
-@app.route('/')
-def index():
-    return render_template('singleuser.html',title="Blogz", posts=posts,)       
+# @app.route('/')
+# def index():
+#     return render_template('singleuser.html',title="Blogz", posts=posts,)       
 
 
 @app.route('/login', methods=['POST', 'GET'])
 def login():
     if request.method == 'POST':
-        email = request.form['email']
+        username = request.form['username']
         password = request.form['password']
-        user = User.query.filter_by(email=email).first()
+        user = User.query.filter_by(username=username).first()
         if user and user.password == password:
-            session['email'] = email
+            session['username'] = username
             flash("Logged in")
-            return redirect('/')
+            return redirect('/newpost')
         else:
             flash('User password incorrect, or user does not exist', 'error')
 
@@ -71,45 +71,73 @@ def login():
 
 @app.route('/logout')
 def logout():
-    del session['email']
-    return redirect('/')    
+    if 'username' in session:
+        del session['username']
+    return redirect('/blog')    
 
 
 @app.route("/signup", methods=['GET', 'POST'])
 def signup():
     if request.method == 'POST':
-        email = request.form['email']
+        username = request.form['username']
         password = request.form['password']
         verify = request.form['verify']
         
-        email_db_count = User.query.filter_by(email=email).count()
-        if email_db_count > 0:
-            flash('yikes! "' + email + '" is already taken and password reminders are not implemented')
+        username_db_count = User.query.filter_by(username=username).count()
+        if username_db_count > 0:
+            flash('yikes! "' + username + '" is already taken and password reminders are not implemented')
             return redirect('/signup')
         if password != verify:
             flash('passwords did not match')
             return redirect('/signup')
-        user = User(email=email, password=password)
+        user = User(username=username, password=password)
         db.session.add(user)
         db.session.commit()
-        session['user'] = user.email
-        return redirect("/")
+        session['user'] = user.username
+        return redirect("/newpost")
     else:
         return render_template('signup.html')
 
+def get_user_posts(username):
+    return User.query.filter_by(username=session['username']).first()
 
-@app.route('/blogs', methods=['POST', 'GET'])
-def blogs():
+@app.route('/',  methods=['POST', 'GET'])
+def home():
+    allusers = User.query.all()
+    return render_template('index.html', users=allusers)
+
+@app.route('/blog', methods=['POST', 'GET'])
+def blog():
     
     #Query database for all blog posts
     allblogposts = Blog.query.all()
     post_id = request.args.get('id')
-  
-    if (post_id):
-        blogpost = Blog.query.get(post_id)
-        return render_template('singleuser.html', blogpost=blogpost)
+    user_id = request.args.get('userid')
+    username = request.args.get('username')
+    blogpost = Blog.query.filter_by(id=post_id).first()
+    owner = User.query.filter_by(username=session['username']).first()
 
-    return render_template('blogs.html', title="Blogs!", posts=allblogposts)
+    welcome = "You are not logged in"
+    if 'username' in session:
+        welcome = "Welcome, " + session['username']
+      
+    if (post_id):
+        welcome = "Welcome, " + session['username']
+        blogpost = Blog.query.filter_by(id=post_id).first()
+        owner = User.query.filter_by(username=session['username']).first()
+        return render_template('singlepost.html', blogpost=blogpost, owner=blogpost.owner.username, welcome=welcome)
+
+    if (user_id):
+        allblogposts = Blog.query.all()
+        username = request.args.get('username')
+        blogpost = Blog.query.filter_by(id=post_id).first()
+        owner = User.query.filter_by(username=session['username']).first()
+        posts = Blog.query.filter_by(owner_id=user_id).all()
+        return render_template('singleuser.html', posts=allblogposts, blogpost=blogpost)        
+
+
+    return render_template('blog.html', title="Blogs!", posts=allblogposts, blogpost=blogpost, welcome=welcome)
+
 
 
 
@@ -123,7 +151,7 @@ def newpost():
         #look inside the html form for user data    
         title = request.form['title']
         post = request.form['post']
-        owner = User.query.filter_by(email=session['email']).first()
+        owner = User.query.filter_by(username=session['username']).first()
         
         #creat a newpost reference 
         newpost = Blog(title, post, owner)
@@ -131,7 +159,7 @@ def newpost():
         db.session.commit()
 
         #creat a link to go to the new post when use clicks submit
-        postlink = "/blogs?id=" + str(newpost.id)
+        postlink = "/blog?id=" + str(newpost.id)
 
         return redirect(postlink)
 
